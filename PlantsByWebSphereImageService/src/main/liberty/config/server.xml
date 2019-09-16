@@ -35,11 +35,11 @@
      <dataSource id="db2nonxa" jndiName="jdbc/PlantsByWebSphereDataSourceNONJTA" type="javax.sql.ConnectionPoolDataSource">
    <jdbcDriver libraryRef="DB2JCCLib"/>
    <properties.db2.jcc
-    serverName="icp4app.169.55.4.138.nip.io"
-              portNumber="50000"
-              databaseName="PBW"
-              user="db2inst1"
-              password="db2inst1"/>
+    serverName="${env.DB2_HOST}"
+              portNumber="${env.DB2_PORT}"
+              databaseName="${env.DB2_DBNAME}"
+              user="${env.DB2_USER}"
+              password="${env.DB2_PASSWORD}"/>
     </dataSource>
 
  
