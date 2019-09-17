@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: gse-liberty-deploy
+  template: pbwis-liberty-deploy
 metadata:
-  name: gse-liberty-deploy
+  name: pbwis-liberty-deploy
 objects:
 - apiVersion: v1
   kind: Service
@@ -22,10 +22,6 @@ objects:
     - name: 9443-tcp
       port: 9443
       targetPort: 9443
-      protoco: TCP
-    - name: http
-      port: 9082
-      targetPort: 9082
       protoco: TCP
     selector:
       deploymentConfig: ${APPLICATION_NAME}
@@ -88,7 +84,7 @@ objects:
           name: ${APPLICATION_NAME}
           livenessProbe:
             tcpSocket:
-              port: 9443
+              port: 9080
             initialDelaySeconds: 45
             periodSeconds: 45
             successThreshold: 1
@@ -101,12 +97,9 @@ objects:
           - containerPort: 9443
             name: 9443-tcp
             protocol: TCP
-          - containerPort: 9082
-            name: http
-            protocol: TCP
           readinessProbe:
             tcpSocket:
-              port: 9443
+              port: 9080
             initialDelaySeconds: 180
             periodSeconds: 5
             successThreshold: 1
@@ -140,19 +133,19 @@ parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
   required: true
-  value: tasks
+  value: PlantsByWebSphereEE7ImageService
 - description: Hostname for COS application database
   name: DB2_HOST
   required: true
-  value: db2.db2.svc
-- desciption: Port for COS application database
+  value: icp4app.169.55.4.138.nip.io
+- desciption: Port for PBWIS application database
   name: DB2_PORT
   required: true
   value: '50000'
-- description: Database name for COS application
+- description: Database name for PBWIS application
   name: DB2_DBNAME
   required: true
-  value: ORDERDB
+  value: PBW
 - description: DB2 Username
   name: DB2_USER
   required: true

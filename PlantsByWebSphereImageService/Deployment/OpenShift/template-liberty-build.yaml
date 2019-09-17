@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: gse-liberty-build
+  template: pbwis-liberty-build
 metadata:
-  name: gse-liberty-build
+  name: pbwis-liberty-build
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -81,14 +81,14 @@ parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
   required: true
-  value: tasks
+  value: PlantsByWebSphereEE7ImageService
 - description: Git source URI for application
   name: SOURCE_URL
   required: true
-  value: https://github.com/ibm-cloud-architecture/cloudpak-for-applications
+  value: https://github.com/kpostreich/PlantsByWebSphereEE7ImageService
 - description: Git branch/tag reference
   name: SOURCE_REF
-  value: liberty
+  value: master
 - description: WebSphere Docker Image Name -
   name: WEBSPHERE_IMAGE
   required: true
@@ -96,4 +96,4 @@ parameters:
 - description: WebSphere Docker Image Version -
   name: WEBSPHERE_VERSION
   required: true
-  value: kernel-ubi-min
+  value: 19.0.0.6-javaee7-ubi-min-amd64
