@@ -1,9 +1,9 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 labels:
-  template: gse-liberty-deploy
+  template: pbwis-liberty-deploy
 metadata:
-  name: gse-liberty-deploy
+  name: pbwis-liberty-deploy
 objects:
 - apiVersion: v1
   kind: Service
@@ -17,21 +17,17 @@ objects:
     ports:
     - name: 9080-tcp
       port: 9080
-      targetPort: 9080
       protoco: TCP
+      targetPort: 9080
     - name: 9443-tcp
       port: 9443
+      protoco: TCP
       targetPort: 9443
-      protoco: TCP
-    - name: http
-      port: 9082
-      targetPort: 9082
-      protoco: TCP
     selector:
       deploymentConfig: ${APPLICATION_NAME}
 - apiVersion: v1
-  kind: Route
   id: ${APPLICATION_NAME}-http
+  kind: Route
   metadata:
     annotations:
       description: Route for application's http service.
@@ -39,12 +35,12 @@ objects:
       application: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
   spec:
-    to:
-      name: ${APPLICATION_NAME}
     port:
       targetPort: 9443-tcp
     tls:
       termination: passthrough
+    to:
+      name: ${APPLICATION_NAME}
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -85,15 +81,15 @@ objects:
             value: ${DB2_PASSWORD}
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
-          name: ${APPLICATION_NAME}
           livenessProbe:
-            tcpSocket:
-              port: 9443
+            failureThreshold: 3
             initialDelaySeconds: 45
             periodSeconds: 45
             successThreshold: 1
+            tcpSocket:
+              port: 9080
             timeoutSeconds: 1
-            failureThreshold: 3
+          name: ${APPLICATION_NAME}
           ports:
           - containerPort: 9080
             name: 9080-tcp
@@ -101,31 +97,28 @@ objects:
           - containerPort: 9443
             name: 9443-tcp
             protocol: TCP
-          - containerPort: 9082
-            name: http
-            protocol: TCP
           readinessProbe:
-            tcpSocket:
-              port: 9443
+            failureThreshold: 3
             initialDelaySeconds: 180
             periodSeconds: 5
             successThreshold: 1
+            tcpSocket:
+              port: 9080
             timeoutSeconds: 1
-            failureThreshold: 3
           securityContext:
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
-                - ALL
+              - ALL
             privileged: false
             readOnlyRootFilesystem: false
-            allowPrivilegeEscalation: false
-        terminationGracePeriodSeconds: 60
         dnsPolicy: ClusterFirst
-        serviceAccountName: websphere
-        serviceAccount: websphere
         securityContext:
-          runAsUser: 1001
           runAsNonRoot: true
+          runAsUser: 1001
+        serviceAccount: websphere
+        serviceAccountName: websphere
+        terminationGracePeriodSeconds: 60
     triggers:
     - imageChangeParams:
         automatic: true
@@ -140,19 +133,18 @@ parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
   required: true
-  value: tasks
-- description: Hostname for COS application database
+  value: PlantsByWebSphereEE7ImageService
+- description: Hostname for PBWIS application database
   name: DB2_HOST
   required: true
-  value: db2.db2.svc
-- desciption: Port for COS application database
-  name: DB2_PORT
+  value: icp4app.169.55.4.138.nip.io
+- name: DB2_PORT
   required: true
-  value: '50000'
-- description: Database name for COS application
+  value: "50000"
+- description: Database name for PBWIS application
   name: DB2_DBNAME
   required: true
-  value: ORDERDB
+  value: PBW
 - description: DB2 Username
   name: DB2_USER
   required: true
