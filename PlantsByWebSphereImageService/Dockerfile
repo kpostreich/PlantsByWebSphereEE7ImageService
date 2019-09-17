@@ -1,7 +1,6 @@
 #FROM ibmcom/websphere-liberty:webProfile7-ubi-min-amd64
 
-FROM ibmcom/websphere-liberty:javaee7-ubi-min-amd64
-
+FROM ibmcom/websphere-liberty:19.0.0.6-javaee7-ubi-min-amd64
 
 #COPY . /project
 #WORKDIR /project
